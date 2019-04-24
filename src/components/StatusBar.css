@@ -1,0 +1,6 @@
+.status-bar {
+  border: 1px solid yellow;
+  height: 5vh;
+  line-height: 5vh;
+  padding-left: 2%;
+}
