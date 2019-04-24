@@ -18,6 +18,7 @@ export default class ButtonStatusBar extends Component {
             closeModal={this.props.closeModal}
             endpoint={this.props.config.endpoint}
             config={this.props.config}
+            responseJson={this.props.responseJson}
           />
         )}
         

@@ -20,22 +20,27 @@ export default class Modal extends Component {
   }
 
   handleAuthorize = () => {
+    const copyResponseJson = this.props.responseJson
+
+    const dataJson = {
+      liberadoPara: this.state.name,
+      motivo: this.state.reason
+    }
+
+    copyResponseJson.sentidoAntiHorarioLiberado = true
+    copyResponseJson.sentidosentidoHorarioLiberado = true
+    copyResponseJson.texto = "Acesso Liberado"
+    copyResponseJson.usuarioNome = dataJson.liberadoPara
+    copyResponseJson.msgRecepcao = dataJson.motivo
+    copyResponseJson.semComando = false
+    copyResponseJson.liberacaoTempo = 10000
+    copyResponseJson.nomeCatraca = this.props.config.nomeDoDispositivo
+    copyResponseJson.motivoLiberacaoManual = dataJson
+
+    const copyResponseJsonStringified = JSON.stringify(copyResponseJson)
+
     fetch(
-      `${
-        this.props.config.endpoint
-      }?libCatraca={"nsLeitor":"","nsPlc":"","semComando":false,"usuarioNome":${
-        this.state.name
-      },"usuarioId":"","convidado":false,"dispositivoIdentificacao":"","texto":"","msgRecepcao":${
-        this.state.reason
-      },"sentidoHorarioLiberado":true,"sentidoAntiHorarioLiberado":true,"liberacaoTempo":10000,"grupoCatracas":${
-        this.props.config.grupo
-      },"nomeCatraca":${
-        this.props.config.nomeDoDispositivo
-      },"motivoLiberacaoManual":"{"liberadoPara":"${
-        this.state.name
-      }","motivo":${
-        this.state.reason
-      }}","qtdAcessosPorDia":0,"temTimeZones":false,"msgBloqueioTimeZone":"","gruposTimeZone":"","intervaloMinimo":0}'`
+      `${this.props.config.endpoint}?libCatraca=${copyResponseJsonStringified}`
     )
       .then(res => res.json())
       .then(res => {
@@ -93,7 +98,7 @@ export default class Modal extends Component {
                 color: "white",
                 fontSize: 15,
                 borderRadius: 10,
-                margin: "0 1%",
+                margin: "0 1%"
               }}
               type="submit"
               onClick={event => {

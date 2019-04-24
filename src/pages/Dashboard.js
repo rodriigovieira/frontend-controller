@@ -91,23 +91,15 @@ export default class Dashboard extends Component {
   }
 
   handleAuthorize = endpoint_lib_identificada => {
-    fetch(
-      `${endpoint_lib_identificada}?libCatraca={ "nsLeitor":"","nsPlc":"","semComando":false,"usuarioNome":${
-        this.state.responseJson.usuarioNome
-      },"usuarioId":${
-        this.state.identificacao_usuarioId
-      },"convidado":false,"dispositivoIdentificacao":"","texto":"","msgRecepcao":${
-        this.state.responseJson.msgRecepcao
-      },"sentidoHorarioLiberado":true,"sentidoAntiHorarioLiberado":true,"liberacaoTempo":10000,"grupoCatracas":${
-        this.state.responseJson.grupoCatraca
-      },"nomeCatraca":${
-        this.state.responseJson.nomeCatraca
-      },"motivoLiberacaoManual":"{"liberadoPara":"${
-        this.state.responseJson.usuarioNome
-      }","motivo":${
-        this.state.responseJson.msgRecepcao
-      }}","qtdAcessosPorDia":0,"temTimeZones":false,"msgBloqueioTimeZone":"","gruposTimeZone":"","intervaloMinimo":0}'`
-    )
+    const copyResponseJson = { ...this.state.responseJson }
+
+    copyResponseJson.sentidoAntiHorarioLiberado = true
+    copyResponseJson.sentidosentidoHorarioLiberado = true
+    copyResponseJson.texto = "Acesso Liberado"
+
+    const copyResponseJsonStringified = JSON.stringify(copyResponseJson)
+
+    fetch(`${endpoint_lib_identificada}?libCatraca=${copyResponseJsonStringified}`)
       .then(res => res.json())
       .then(res => {
         console.log(res)
@@ -212,6 +204,7 @@ export default class Dashboard extends Component {
               openModal={this.openModal}
               closeModal={this.closeModal}
               statusBarButtonsConfig={statusBarButtonsConfig}
+              responseJson={this.state.responseJson}
             />
           </Fragment>
         ))}

@@ -21,6 +21,7 @@ export default class StatusBar extends Component {
                 closeModal={this.props.closeModal}
                 showModal={this.props.showModal}
                 config={button}
+                responseJson={this.props.responseJson}
               />
             )
           })}
