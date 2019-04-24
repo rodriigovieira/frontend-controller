@@ -2,12 +2,18 @@ import React, { Component } from 'react'
 
 import './Header.css'
 
+// Esse componente contém as informações na parte superior.
+// A foto, o nome, o status de acesso e o botão de liberação,
+// além do título. O design do Header está no arquivo de mesmo nome.
+
 export default class Header extends Component {
   render() {
+    const { title, name, text} = this.props
+
     return (
       <div className="header">
         <p className="header__title">
-          Catraca Principal
+          {title}
         </p>
 
         <div className="header-container">
@@ -17,11 +23,11 @@ export default class Header extends Component {
 
           <div className="header-info">
             <p className="header-info__name">
-              oi
+              {name}
             </p>
 
             <div className="header-info__text">
-              <p>oi</p>
+              <p>{text}</p>
             </div>
             <button
               className="header-info__button"
