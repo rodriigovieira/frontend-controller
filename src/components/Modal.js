@@ -9,7 +9,8 @@ const releaseReasonsArray = JSON.parse(
 export default class Modal extends Component {
   state = {
     name: "",
-    reason: ""
+    reason: "",
+    error: ""
   }
 
   handleChange = event => {
@@ -36,7 +37,7 @@ export default class Modal extends Component {
         this.state.reason
       }}","qtdAcessosPorDia":0,"temTimeZones":false,"msgBloqueioTimeZone":"","gruposTimeZone":"","intervaloMinimo":0}'`
     )
-      .then(primeiroRes => primeiroRes.json())
+      .then(res => res.json())
       .then(res => {
         console.log(res)
       })
@@ -56,8 +57,8 @@ export default class Modal extends Component {
           <hr />
 
           <form>
-            <span style={{ marginLeft: "4%", fontSize: 15 }}>
-              Motivo da Liberação:&nbsp;&nbsp;
+            <span style={{ fontSize: 15 }}>
+              Motivo Liberação:&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
             <select
               name="reason"
@@ -74,15 +75,13 @@ export default class Modal extends Component {
               ))}
             </select>
             <hr />
-            <span style={{ marginLeft: "4%" }}>
-              Nome da Pessoa: &nbsp;&nbsp;
-            </span>
+            <span>Nome da Pessoa: &nbsp;</span>
             <input
               type="text"
               onChange={this.handleChange}
               value={this.state.name}
               name="name"
-              style={{ fontSize: 16 }}
+              style={{ fontSize: 15 }}
               required
             />
             <hr />
@@ -94,18 +93,17 @@ export default class Modal extends Component {
                 color: "white",
                 fontSize: 15,
                 borderRadius: 10,
-                margin: "1%",
-                marginLeft: "3%"
+                margin: "0 1%",
               }}
               type="submit"
               onClick={event => {
                 event.preventDefault()
-                // if (!this.state.motivo || !this.state.nomeDaPessoa) {
-                //   this.setState({ erro: true })
-                //   return null
-                // } else {
-                //   this.setState({ erro: false })
-                // }
+                if (!this.state.reason || !this.state.name) {
+                  this.setState({ error: true })
+                  return null
+                } else {
+                  this.setState({ error: false })
+                }
 
                 this.handleAuthorize()
                 this.props.closeModal()
@@ -122,12 +120,12 @@ export default class Modal extends Component {
                 color: "white",
                 fontSize: 15,
                 borderRadius: 10,
-                margin: "1%"
+                margin: "0 1%"
               }}
               onClick={event => {
                 event.preventDefault()
                 this.props.closeModal()
-                // this.setState({ erro: false })
+                this.setState({ error: false })
               }}
             >
               Cancelar
