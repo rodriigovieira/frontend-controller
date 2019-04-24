@@ -10,6 +10,12 @@ import "./Dashboard.css"
 // e transforma-as em uma array, a ser usada pelo app.
 const screensConfig = JSON.parse(process.env.REACT_APP_CONFIGURACAO_TELA)
 
+// Array com as configurações do arquivo .env
+// referentes aos botões da status bar.
+const statusBarButtonsConfig = JSON.parse(
+  process.env.REACT_APP_CONFIGURACAO_BOTOES_STATUS_BAR
+)
+
 // Define o endpoint a ser utilizado pelo fetch,
 // utilizando as variáveis de ambiente.
 const endpoint = `http://${process.env.REACT_APP_HOSTNAME_DO_SERVIDOR}:${
@@ -22,19 +28,31 @@ const endpoint = `http://${process.env.REACT_APP_HOSTNAME_DO_SERVIDOR}:${
 
 export default class Dashboard extends Component {
   state = {
-    lastId: 0,
+    lastId: -1,
     response: {},
-    screensConfigToRender: screensConfig
+    screensConfigToRender: screensConfig,
+    showModal: false
   }
+
+  openModal = () => this.setState({ showModal: true })
+  closeModal = () => this.setState({ showModal: false })
 
   componentWillMount() {
     // setInterval para a função rodar a cada 400ms,
     // verificando se houve alguma mudança no ultimoId.
     setInterval(() => {
-      fetch(`${endpoint}/servidorCatracaIF/logCatraca/ultimoId`)
+      fetch(`${endpoint}/servidorCatracaIF/logCatraca/ultimoIdCompleto`)
         .then(res => res.json()) // o fetch retorna uma Promise, e é preciso convertê-la.
         .then(({ result }) => {
           // o { result } nada mais é do que o res.result.
+
+          // Verificando se há algum lastId existente.
+          // Caso não haja, encerrará a chamada.
+          if (this.state.lastId === -1) {
+            this.setState({ lastId: result })
+            return null
+          }
+
           if (result === this.state.lastId) return null
 
           fetch(`${endpoint}/servidorCatracaIF/logCatraca/${result}`)
@@ -70,6 +88,30 @@ export default class Dashboard extends Component {
         })
         .catch(e => console.log(e))
     }, 400)
+  }
+
+  handleAuthorize = endpoint_lib_identificada => {
+    fetch(
+      `${endpoint_lib_identificada}?libCatraca={ "nsLeitor":"","nsPlc":"","semComando":false,"usuarioNome":${
+        this.state.responseJson.usuarioNome
+      },"usuarioId":${
+        this.state.identificacao_usuarioId
+      },"convidado":false,"dispositivoIdentificacao":"","texto":"","msgRecepcao":${
+        this.state.responseJson.msgRecepcao
+      },"sentidoHorarioLiberado":true,"sentidoAntiHorarioLiberado":true,"liberacaoTempo":10000,"grupoCatracas":${
+        this.state.responseJson.grupoCatraca
+      },"nomeCatraca":${
+        this.state.responseJson.nomeCatraca
+      },"motivoLiberacaoManual":"{"liberadoPara":"${
+        this.state.responseJson.usuarioNome
+      }","motivo":${
+        this.state.responseJson.msgRecepcao
+      }}","qtdAcessosPorDia":0,"temTimeZones":false,"msgBloqueioTimeZone":"","gruposTimeZone":"","intervaloMinimo":0}'`
+    )
+      .then(res => res.json())
+      .then(res => {
+        console.log(res)
+      })
   }
 
   renderHeader = index => {
@@ -150,7 +192,13 @@ export default class Dashboard extends Component {
           // A propriedade "key" serve para agilizar a renderização
           // do React, no caso de chamar o "this.setState".
           <Fragment key={Math.random()}>
-            <Header key={Math.random()} config={config} />
+            <Header
+              key={Math.random()}
+              config={config}
+              handleAuthorize={() =>
+                this.handleAuthorize(config.endpoint_lib_identificada)
+              }
+            />
 
             <Logs
               key={Math.random()}
@@ -158,7 +206,13 @@ export default class Dashboard extends Component {
               color={config.fontColor}
             />
 
-            <StatusBar key={Math.random()} />
+            <StatusBar
+              key={Math.random()}
+              showModal={this.state.showModal}
+              openModal={this.openModal}
+              closeModal={this.closeModal}
+              statusBarButtonsConfig={statusBarButtonsConfig}
+            />
           </Fragment>
         ))}
       </div>

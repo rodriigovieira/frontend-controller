@@ -27,7 +27,12 @@ export default class Header extends Component {
             </div>
 
             {showButton && (
-              <button className="header-info__button">LIBERAR</button>
+              <button
+                className="header-info__button"
+                onClick={this.props.handleAuthorize}
+              >
+                LIBERAR
+              </button>
             )}
           </div>
         </div>

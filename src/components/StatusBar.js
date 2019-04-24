@@ -1,32 +1,31 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from "react"
 
-import ButtonStatusBar from './ButtonStatusBar'
+import ButtonStatusBar from "./ButtonStatusBar"
+import Modal from "./Modal"
 
-import './StatusBar.css'
-
-// Array com as configurações do arquivo .env
-// referentes aos botões da status bar.
-const statusBarButtonsConfig = JSON.parse(process.env.REACT_APP_CONFIGURACAO_BOTOES_STATUS_BAR)
+import "./StatusBar.css"
 
 // Renderiza a status bar. Todavia, o botão é exibido
 // em seu próprio componente, o ButtonStatusBar,
 // recebendo os valores desse componente.
-
 export default class StatusBar extends Component {
   render() {
     return (
-      <div className="status-bar">
-        {statusBarButtonsConfig.map((button) => {
-          return (
-            <ButtonStatusBar
-              key={button.titulo}
-              title={button.titulo}
-              endpoint={button.endpoint}
-            />
-          )
-        }
-        )}
-      </div>
+      <Fragment>
+        <div className="status-bar">
+          {this.props.statusBarButtonsConfig.map(button => {
+            return (
+              <ButtonStatusBar
+                key={button.titulo}
+                openModal={this.props.openModal}
+                closeModal={this.props.closeModal}
+                showModal={this.props.showModal}
+                config={button}
+              />
+            )
+          })}
+        </div>
+      </Fragment>
     )
   }
 }
