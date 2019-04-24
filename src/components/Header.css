@@ -42,11 +42,12 @@
 }
 
 .header-info__name {
-  margin: 2%;
+  margin: 2.5%;
 }
 
 .header-info__text {
-  margin: 2%;
+  margin: 2.5%;
+  margin-bottom: auto;
 }
 
 .header-info__button {

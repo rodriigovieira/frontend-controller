@@ -15,7 +15,18 @@ export default class Logs extends Component {
         {this.props.messageList &&
           this.props.messageList.map(message => (
             <Fragment key={message.usuarioId}>
-              <p key={message.usuarioNome}>{message.time} - {message.userId} - {message.userName}</p>
+              <p style={{ color: message.color }} key={message.usuarioNome}>
+                {message.time} -{" "}
+                <a
+                  href={process.env.REACT_APP_ENDERECO_DO_CLIENTE}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "inherit" }}
+                >
+                  {message.userId}
+                </a>{" "}
+                - {message.userName}
+              </p>
             </Fragment>
           ))}
       </div>

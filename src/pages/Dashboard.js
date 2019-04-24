@@ -75,9 +75,22 @@ export default class Dashboard extends Component {
   renderHeader = index => {
     const { responseJson, screensConfigToRender } = this.state
     const arrayCopy = [...screensConfigToRender]
+    const isAuthorized =
+      responseJson.sentidosentidoHorarioLiberado ||
+      responseJson.sentidoAntiHorarioLiberado
+    const fontColor = isAuthorized ? "green" : "red"
 
     arrayCopy[index].name = responseJson.usuarioNome
     arrayCopy[index].text = responseJson.texto
+    arrayCopy[index].showButton = !isAuthorized
+    arrayCopy[index].fontColor = fontColor
+
+    setTimeout(() => {
+      arrayCopy[index].showButton = false
+      this.setState({
+        screensConfigToRender: arrayCopy
+      })
+    }, 3000)
 
     this.setState({
       screensConfigToRender: arrayCopy
@@ -89,6 +102,10 @@ export default class Dashboard extends Component {
   renderLogs = index => {
     const { responseJson, screensConfigToRender } = this.state
     const arrayCopy = [...screensConfigToRender]
+    const isAuthorized =
+      responseJson.sentidosentidoHorarioLiberado ||
+      responseJson.sentidoAntiHorarioLiberado
+    const fontColor = isAuthorized ? "green" : "red"
 
     if (!arrayCopy[index].messageList) arrayCopy[index].messageList = []
 
@@ -101,7 +118,8 @@ export default class Dashboard extends Component {
     const messageElements = {
       time,
       userId: responseJson.usuarioId,
-      userName: responseJson.usuarioNome.toUpperCase()
+      userName: responseJson.usuarioNome.toUpperCase(),
+      color: fontColor
     }
 
     arrayCopy[index].messageList.unshift(messageElements)
@@ -112,7 +130,7 @@ export default class Dashboard extends Component {
   }
 
   render() {
-    const { response, responseJson, screensConfigToRender } = this.state
+    const { screensConfigToRender } = this.state
 
     return (
       // Inline styling. No React, passam-se as informações
@@ -132,13 +150,14 @@ export default class Dashboard extends Component {
           // A propriedade "key" serve para agilizar a renderização
           // do React, no caso de chamar o "this.setState".
           <Fragment key={Math.random()}>
-            <Header
+            <Header key={Math.random()} config={config} />
+
+            <Logs
               key={Math.random()}
-              title={config.titulo}
-              name={config.name}
-              text={config.text}
+              messageList={config.messageList}
+              color={config.fontColor}
             />
-            <Logs key={Math.random()} messageList={config.messageList} />
+
             <StatusBar key={Math.random()} />
           </Fragment>
         ))}

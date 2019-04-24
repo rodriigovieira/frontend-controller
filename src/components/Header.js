@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component } from "react"
 
-import './Header.css'
+import "./Header.css"
 
 // Esse componente contém as informações na parte superior.
 // A foto, o nome, o status de acesso e o botão de liberação,
@@ -8,13 +8,11 @@ import './Header.css'
 
 export default class Header extends Component {
   render() {
-    const { title, name, text} = this.props
+    const { titulo, name, text, showButton, fontColor } = this.props.config
 
     return (
-      <div className="header">
-        <p className="header__title">
-          {title}
-        </p>
+      <div className="header" style={{ color: fontColor }}>
+        <p className="header__title">{titulo}</p>
 
         <div className="header-container">
           <div className="header__photo">
@@ -22,18 +20,15 @@ export default class Header extends Component {
           </div>
 
           <div className="header-info">
-            <p className="header-info__name">
-              {name}
-            </p>
+            <p className="header-info__name">{name}</p>
 
             <div className="header-info__text">
               <p>{text}</p>
             </div>
-            <button
-              className="header-info__button"
-            >
-              LIBERAR
-          </button>
+
+            {showButton && (
+              <button className="header-info__button">LIBERAR</button>
+            )}
           </div>
         </div>
       </div>
